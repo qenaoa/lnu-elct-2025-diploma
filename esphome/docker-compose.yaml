@@ -1,0 +1,11 @@
+services:
+  esphome:
+    container_name: esphome
+    image: "ghcr.io/esphome/esphome"
+    network_mode: host
+    volumes:
+      - /home/netnax/docker_apps/iot/esphome/data:/config
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+

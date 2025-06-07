@@ -1,0 +1,19 @@
+networks:
+  iot:
+    external: true
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "8883:8883"
+     # - "1883:1883"
+    volumes:
+      - /home/netnax/docker_apps/iot/mosquitto/config:/mosquitto/config
+      - /home/netnax/docker_apps/iot/mosquitto/data:/mosquitto/data
+    networks:
+        iot:
+            ipv4_address: 172.28.0.2

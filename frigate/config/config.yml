@@ -1,0 +1,65 @@
+tls:
+  enabled: false
+
+mqtt:
+  host: mosquitto
+  user: homeassistant
+  password: vmme4eko7jzDiqS
+
+go2rtc:
+  streams:
+    esp32cam: ffmpeg:http://192.168.1.215:8080/#video=h264#hardware
+
+cameras:
+  esp32cam:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/esp32cam
+          roles:
+            - detect
+          input_args: preset-rtsp-restream
+
+    detect:
+      enabled: true
+      width: 800
+      height: 600
+      fps: 3
+    objects:
+      track:
+        - person
+
+detectors: # required
+  rknn: # required
+    type: rknn # required
+    # number of NPU cores to use
+    # 0 means choose automatically
+    # increase for better performance if you have a multicore NPU e.g. set to 3 on rk3588
+    num_cores: 0
+
+model: # required
+  # name of model (will be automatically downloaded) or path to your own .rknn model file
+  # possible values are:
+  # - deci-fp16-yolonas_s
+  # - deci-fp16-yolonas_m
+  # - deci-fp16-yolonas_l
+  # - /config/model_cache/your_custom_model.rknn
+  path: deci-fp16-yolonas_s
+  # width and height of detection frames
+  width: 320
+  height: 320
+  # pixel format of detection frame
+  # default value is rgb but yolo models usually use bgr format
+  input_pixel_format: bgr # required
+  # shape of detection frame
+  input_tensor: nhwc
+  # needs to be adjusted to model, see below
+  labelmap_path: /labelmap.txt # required
+
+# if you try to decode a h264 encoded stream
+ffmpeg:
+  hwaccel_args: preset-rk-h264
+
+# if you try to decode a h265 (hevc) encoded stream
+#ffmpeg:
+#  hwaccel_args: preset-rk-h265
+version: 0.15-1
